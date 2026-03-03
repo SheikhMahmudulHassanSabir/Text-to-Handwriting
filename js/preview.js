@@ -17,6 +17,7 @@ const PREVIEW_SCALE = 0.5;
  * @param {HTMLElement} paperEl - the #preview-paper element
  */
 export function renderPreview(state, paperEl) {
+    if (!paperEl) return;
     const {
         text, font, fontSize, inkColor, paperSize,
         lineHeight, wordSpacing, letterSpacing, margin,

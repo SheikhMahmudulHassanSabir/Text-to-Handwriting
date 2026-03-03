@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Favicon (SVG for efficiency) -->
+    <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E✒%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+    <meta name="description"
+        content="Transform any typed text into beautiful handwriting. Choose from 8 fonts, 6 ink colours, custom paper sizes, and download as PNG or multi-page PDF — free and private." />
+    <meta name="theme-color" content="#7c3aed" />
+    <title>About — Text to Handwriting</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <script type="module" src="./js/main.js"></script>
+</head>
+
+<body>
+    <header class="site-header" role="banner">
+        <div class="container">
+            <a href="./index.html" class="logo">
+                <p class="logo__title">Text to Handwriting</p>
+            </a>
+            <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
+                <span class="hamburger"></span>
+            </button>
+            <nav class="site-nav" id="site-nav">
+                <a href="./index.html" class="nav-link">Home</a>
+                <a href="./about.html" class="nav-link nav-link--active">About</a>
+                <a href="./guide.html" class="nav-link">Guide</a>
+            </nav>
+            <div class="badge">EST. 2026</div>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="content-page">
+            <span class="privacy-badge">Privacy First</span>
+            <h1>About This Project</h1>
+
+            <p>Text to Handwriting is a minimalist, high-end tool designed to bridge the gap between digital convenience
+                and the personal touch of pen and paper. Whether you're a student looking to convert notes or a
+                professional wanting to add a custom feel to digital correspondence, this tool provides a seamless
+                experience.</p>
+
+            <h2>The Mission</h2>
+            <p>In an increasingly digital world, the art of handwriting is becoming a rarity. Our mission is to preserve
+                the aesthetic of the human hand while leveraging modern technology to make it accessible to everyone. We
+                focus on clean design, intuitive controls, and high-quality exports.</p>
+
+            <h2>Privacy & Security</h2>
+            <p>Your privacy is our top priority. Unlike many online converters, <strong>this application processes
+                    everything locally in your browser.</strong> Your text, font choices, and generated images are never
+                uploaded to a server. What you create stays on your device.</p>
+
+            <h2>By Sheikh</h2>
+            <p>This "Minimalist Edition" is curated and developed by <strong>Sheikh</strong>. Every element, from the
+                monochrome palette to the refined typography, has been chosen to create an environment that is both
+                functional and beautiful.</p>
+
+            <div
+                style="margin-top: var(--space-12); padding-top: var(--space-8); border-top: 1px solid var(--clr-grey-100);">
+                <a href="./index.html" class="btn btn--primary">Get Started</a>
+            </div>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Made with ♥ BY SHEIKH</p>
+            <p>© 2026 Text to Handwriting</p>
+        </div>
+    </footer>
+</body>
+
+</html>

@@ -29,48 +29,80 @@ export function renderPreview(state, paperEl) {
     const scaledWordSpacing = wordSpacing * PREVIEW_SCALE;
     const scaledLetterSpacing = letterSpacing * PREVIEW_SCALE;
     const scaledWidth = paperSize.width * PREVIEW_SCALE;
-    const scaledMinHeight = paperSize.height * PREVIEW_SCALE;
+    const scaledHeight = paperSize.height * PREVIEW_SCALE;
 
-    // ── Paper container ──────────────────────────────────────────
-    paperEl.style.width = `${scaledWidth}px`;
-    paperEl.style.minHeight = `${scaledMinHeight}px`;
-    paperEl.style.padding = `${scaledMargin}px`;
-    paperEl.style.backgroundColor = paperColor;
-    paperEl.style.position = 'relative';
+    // Clear existing sheets
+    paperEl.innerHTML = '';
 
-    // Toggle effect classes (CSS handles the actual filter/shadow)
-    paperEl.classList.toggle('effect-texture', effect === 'texture');
-    paperEl.classList.toggle('effect-shadow', effect === 'shadow');
-    paperEl.classList.toggle('effect-scanner', effect === 'scanner');
+    // ── Pagination Logic ──────────────────────────────────────────
+    // Create a hidden measuring element to check for overflow
+    const measureEl = document.createElement('div');
+    measureEl.style.cssText = `
+        position: absolute;
+        visibility: hidden;
+        width: ${scaledWidth - (scaledMargin * 2)}px;
+        font-family: ${font};
+        font-size: ${scaledFontSize}px;
+        line-height: ${lineHeight};
+        word-spacing: ${scaledWordSpacing}px;
+        letter-spacing: ${scaledLetterSpacing}px;
+        white-space: pre-wrap;
+    `;
+    document.body.appendChild(measureEl);
 
+    const pages = [];
+    let currentPageText = '';
+    const lines = text.split('\n');
 
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const testText = currentPageText + (currentPageText ? '\n' : '') + line;
+        measureEl.textContent = testText;
 
-    // ── Text content wrapper ──────────────────────────────────────
-    let contentEl = paperEl.querySelector('.paper-content');
-    if (!contentEl) {
-        contentEl = document.createElement('div');
-        contentEl.className = 'paper-content';
-        paperEl.appendChild(contentEl);
+        // If this line causes overflow, push current page and start new one
+        if (measureEl.offsetHeight > (scaledHeight - (scaledMargin * 2)) && currentPageText !== '') {
+            pages.push(currentPageText);
+            currentPageText = line;
+        } else {
+            currentPageText = testText;
+        }
     }
+    pages.push(currentPageText); // Push the last page
 
-    contentEl.style.fontFamily = font;
-    contentEl.style.fontSize = `${scaledFontSize}px`;
-    contentEl.style.lineHeight = lineHeight;
-    contentEl.style.color = inkColor;
-    contentEl.style.wordSpacing = `${scaledWordSpacing}px`;
-    contentEl.style.letterSpacing = `${scaledLetterSpacing}px`;
-    contentEl.style.whiteSpace = 'pre-wrap';
-    contentEl.style.position = 'relative';
-    contentEl.style.marginTop = `-${fontSize * 0.05}px`;
+    document.body.removeChild(measureEl);
 
+    // ── Render Sheets ──────────────────────────────────────────
+    pages.forEach(pageText => {
+        const sheet = document.createElement('div');
+        sheet.className = 'preview-sheet';
+        sheet.style.width = `${scaledWidth}px`;
+        sheet.style.height = `${scaledHeight}px`;
+        sheet.style.padding = `${scaledMargin}px`;
+        sheet.style.backgroundColor = paperColor;
 
-    // ── Text node ─────────────────────────────────────────────────
-    let textEl = contentEl.querySelector('.paper-text');
-    if (!textEl) {
-        textEl = document.createElement('div');
-        textEl.className = 'paper-text';
-        contentEl.appendChild(textEl);
-    }
-    // Use textContent — never innerHTML — to prevent XSS
-    textEl.textContent = text;
+        // Effects
+        sheet.classList.toggle('effect-texture', effect === 'texture');
+        sheet.classList.toggle('effect-shadow', effect === 'shadow');
+        sheet.classList.toggle('effect-scanner', effect === 'scanner');
+
+        const content = document.createElement('div');
+        content.className = 'paper-content';
+        content.style.fontFamily = font;
+        content.style.fontSize = `${scaledFontSize}px`;
+        content.style.lineHeight = lineHeight;
+        content.style.color = inkColor;
+        content.style.wordSpacing = `${scaledWordSpacing}px`;
+        content.style.letterSpacing = `${scaledLetterSpacing}px`;
+        content.style.whiteSpace = 'pre-wrap';
+        content.style.position = 'relative';
+        content.style.marginTop = `-${fontSize * 0.05 * PREVIEW_SCALE}px`;
+
+        const textDiv = document.createElement('div');
+        textDiv.className = 'paper-text';
+        textDiv.textContent = pageText;
+
+        content.appendChild(textDiv);
+        sheet.appendChild(content);
+        paperEl.appendChild(sheet);
+    });
 }

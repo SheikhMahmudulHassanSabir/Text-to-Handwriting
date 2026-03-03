@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Favicon (SVG for efficiency) -->
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E✒%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+
+  <!-- SEO -->
+  <title>Text to Handwriting — Free Online Converter</title>
+  <meta name="description"
+    content="Transform any typed text into beautiful handwriting. Choose from 8 fonts, 6 ink colours, custom paper sizes, and download as PNG or multi-page PDF — free and private." />
+  <meta name="theme-color" content="#7c3aed" />
+
+  <!-- Outfit font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Application stylesheet -->
+  <link rel="stylesheet" href="./css/style.css" />
+
+  <!-- External libraries (CDN) with SRI for security -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+    integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+    integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+
+  <!-- Application entry point (ES module) -->
+  <script type="module" src="./js/main.js"></script>
+</head>
+
+<body>
+
+  <header class="site-header" role="banner">
+    <div class="container">
+      <a href="./index.html" class="logo">
+        <p class="logo__title">Text to Handwriting</p>
+      </a>
+      <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span class="hamburger"></span>
+      </button>
+      <nav class="site-nav" id="site-nav">
+        <a href="./index.html" class="nav-link nav-link--active">Home</a>
+        <a href="./about.html" class="nav-link">About</a>
+        <a href="./guide.html" class="nav-link">Guide</a>
+      </nav>
+      <div class="badge">EST. 2026</div>
+    </div>
+  </header>
+
+
+  <!-- ═══════════════════════════════════════════════
+       MAIN CONTENT
+  ═══════════════════════════════════════════════ -->
+  <main class="container" id="main-content">
+    <div class="main-grid">
+
+      <!-- ── LEFT COLUMN: Preview ──────────────────── -->
+      <div class="preview-col" role="region" aria-label="Preview and download">
+
+        <!-- ─ Preview Card ─────────────────────────── -->
+        <section class="card preview-card" aria-labelledby="section-preview">
+          <div class="card__header">
+            <h2 class="card__title" id="section-preview">Preview</h2>
+            <button type="button" id="btn-reset" class="btn btn--outline" title="Reset all settings to defaults"
+              aria-label="Reset settings to defaults">Reset</button>
+          </div>
+          <div class="card__body">
+
+            <!-- Scrollable preview area -->
+            <div class="preview-scroll" id="preview-scroll" role="img" aria-label="Handwriting preview">
+              <!-- Paper sheet — populated by preview.js -->
+              <div id="preview-paper"></div>
+            </div>
+
+            <!-- Download buttons -->
+            <div class="download-bar">
+              <button type="button" id="btn-download-image" class="btn btn--primary" disabled
+                aria-label="Download as PNG image">Download as Image</button>
+
+              <button type="button" id="btn-download-pdf" class="btn btn--secondary" disabled
+                aria-label="Download as PDF">Download as PDF</button>
+            </div>
+
+          </div>
+        </section><!-- /preview-card -->
+
+        <!-- ─ Pro Tips Panel ───────────────────────── -->
+        <aside class="card tips-card" aria-labelledby="tips-title">
+          <div class="card__body">
+            <h3 class="card__title" id="tips-title">
+              <svg class="tips-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                  d="M9.663 17h4.674M12 3v1m8 8h-1M4 12H3m3.343-5.657l-.707-.707m12.728 0l-.707.707M6.636 17.364l-.707.707m12.728 0l-.707-.707M12 21V4.644l0 0a4 4 0 1 0 0 11.356c0 .5-.216 1.1-.4 1.5-.224.4-.6 1-.6 1.5a1 1 0 0 1-1 1z" />
+              </svg>
+              Pro Tips
+            </h3>
+            <ul class="tips-list">
+              <li>Use longer texts for more realistic handwriting appearance</li>
+              <li>Adjust letter spacing to match your style</li>
+              <li>Try the "Scanner" effect for an authentic look</li>
+              <li>PDF export supports multiple pages</li>
+            </ul>
+          </div>
+        </aside>
+
+      </div><!-- /preview-col -->
+
+      <!-- ── RIGHT COLUMN: Controls ─────────────────── -->
+      <div class="controls-col" role="region" aria-label="Handwriting controls">
+
+        <!-- ─ Your Text ─────────────────────────────── -->
+        <section class="card" aria-labelledby="section-text">
+          <div class="card__header">
+            <h2 class="card__title" id="section-text">Your Text</h2>
+          </div>
+          <div class="card__body">
+            <label for="text-input" class="visually-hidden">Enter your text</label>
+            <textarea id="text-input" placeholder="Type or paste your text here…" aria-describedby="char-count"
+              spellcheck="true"></textarea>
+            <div class="text-footer">
+              <span class="char-count" id="char-count" aria-live="polite">0 characters</span>
+              <button type="button" id="btn-clear" class="btn btn--ghost" aria-label="Clear all text">Clear</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─ Font Style ─────────────────────────────── -->
+        <section class="card" aria-labelledby="section-font">
+          <div class="card__header">
+            <h2 class="card__title" id="section-font">Font Style</h2>
+          </div>
+          <div class="card__body">
+
+            <div class="field">
+              <label class="field__label" for="font-select">Handwriting Font</label>
+              <select id="font-select" aria-label="Choose handwriting font"></select>
+            </div>
+
+            <div class="field">
+              <label class="field__label">Ink Color</label>
+              <div class="color-swatches" id="color-swatches" role="group" aria-label="Ink color"></div>
+            </div>
+
+            <div class="field">
+              <div class="field__row">
+                <label class="field__label" for="font-size-slider">Font Size</label>
+                <span class="field__value" id="font-size-value" aria-live="polite">24px</span>
+              </div>
+              <input type="range" id="font-size-slider" min="16" max="48" step="1" value="24" aria-label="Font size"
+                aria-valuemin="16" aria-valuemax="48" />
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ─ Page Settings ──────────────────────────── -->
+        <section class="card" aria-labelledby="section-page">
+          <div class="card__header">
+            <h2 class="card__title" id="section-page">Page Settings</h2>
+          </div>
+          <div class="card__body">
+
+            <div class="field">
+              <label class="field__label" for="paper-size-select">Paper Size</label>
+              <select id="paper-size-select" aria-label="Paper size"></select>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="effect-select">Visual Effect</label>
+              <select id="effect-select" aria-label="Visual effect"></select>
+            </div>
+
+
+          </div>
+        </section>
+
+        <!-- ─ Spacing ────────────────────────────────── -->
+        <section class="card" aria-labelledby="section-spacing">
+          <div class="card__header">
+            <h2 class="card__title" id="section-spacing">Spacing</h2>
+          </div>
+          <div class="card__body">
+
+            <div class="field">
+              <div class="field__row">
+                <label class="field__label" for="line-height-slider">Line Height</label>
+                <span class="field__value" id="line-height-value" aria-live="polite">1.8×</span>
+              </div>
+              <input type="range" id="line-height-slider" min="10" max="30" step="1" value="18"
+                aria-label="Line height" />
+            </div>
+
+            <div class="field">
+              <div class="field__row">
+                <label class="field__label" for="word-spacing-slider">Word Spacing</label>
+                <span class="field__value" id="word-spacing-value" aria-live="polite">4px</span>
+              </div>
+              <input type="range" id="word-spacing-slider" min="0" max="20" step="1" value="4"
+                aria-label="Word spacing" />
+            </div>
+
+            <div class="field">
+              <div class="field__row">
+                <label class="field__label" for="letter-spacing-slider">Letter Spacing</label>
+                <span class="field__value" id="letter-spacing-value" aria-live="polite">0px</span>
+              </div>
+              <input type="range" id="letter-spacing-slider" min="0" max="15" step="1" value="5"
+                aria-label="Letter spacing" />
+            </div>
+
+            <div class="field">
+              <div class="field__row">
+                <label class="field__label" for="margin-slider">Margin Width</label>
+                <span class="field__value" id="margin-value" aria-live="polite">60px</span>
+              </div>
+              <input type="range" id="margin-slider" min="20" max="100" step="5" value="60" aria-label="Page margin" />
+            </div>
+
+          </div>
+        </section>
+
+      </div><!-- /controls-col -->
+
+    </div><!-- /main-grid -->
+  </main>
+
+  <!-- ═══════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <p>Made with <span class="heart" aria-label="love">♥</span> BY SHEIKH</p>
+      <p>© 2026 Text to Handwriting</p>
+    </div>
+  </footer>
+
+</body>
+
+</html>

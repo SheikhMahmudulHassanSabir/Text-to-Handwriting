@@ -43,41 +43,89 @@ function buildExportSheet(state) {
 
     const sheet = getOrCreateExportSheet();
 
+    // The main container should have no padding, as padding is moved to individual sheets
     sheet.style.cssText = `
-    position: fixed;
-    top: -9999px;
-    left: -9999px;
-    width: ${paperSize.width}px;
-    min-height: ${paperSize.height}px;
-    padding: ${margin}px;
-    background-color: ${paperColor};
-    box-sizing: border-box;
-    font-family: ${font};
-    font-size: ${fontSize}px;
-    line-height: ${lineHeight};
-    color: ${inkColor};
-    word-spacing: ${wordSpacing}px;
-    letter-spacing: ${letterSpacing}px;
-    white-space: pre-wrap;
-    overflow: visible;
-  `;
+        position: fixed;
+        top: -9999px;
+        left: -9999px;
+        width: ${paperSize.width}px;
+        background-color: transparent;
+        display: flex;
+        flex-direction: column;
+    `;
 
     sheet.innerHTML = '';
 
+    // Create a hidden measuring element to check for overflow (at full scale)
+    const measureEl = document.createElement('div');
+    measureEl.style.cssText = `
+        position: absolute;
+        visibility: hidden;
+        width: ${paperSize.width - (margin * 2)}px;
+        font-family: ${font};
+        font-size: ${fontSize}px;
+        line-height: ${lineHeight};
+        word-spacing: ${wordSpacing}px;
+        letter-spacing: ${letterSpacing}px;
+        white-space: pre-wrap;
+    `;
+    document.body.appendChild(measureEl);
 
-    // Content / ruled lines wrapper
-    const contentDiv = document.createElement('div');
-    contentDiv.style.position = 'relative';
-    contentDiv.style.marginTop = `-${fontSize * 0.05}px`;
+    const pages = [];
+    let currentPageText = '';
+    const lines = text.split('\n');
 
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const testText = currentPageText + (currentPageText ? '\n' : '') + line;
+        measureEl.textContent = testText;
 
-    const textDiv = document.createElement('div');
-    textDiv.style.position = 'relative';
-    textDiv.style.zIndex = '1';
-    textDiv.textContent = text;
+        const maxContentHeight = paperSize.height - (margin * 2);
 
-    contentDiv.appendChild(textDiv);
-    sheet.appendChild(contentDiv);
+        if (measureEl.offsetHeight > maxContentHeight && currentPageText !== '') {
+            pages.push(currentPageText);
+            currentPageText = line;
+        } else {
+            currentPageText = testText;
+        }
+    }
+    pages.push(currentPageText);
+    document.body.removeChild(measureEl);
+
+    // Create a sheet element for each page
+    pages.forEach(pageText => {
+        const pageSheet = document.createElement('div');
+        pageSheet.className = 'export-sheet';
+        pageSheet.style.cssText = `
+            width: ${paperSize.width}px;
+            height: ${paperSize.height}px;
+            padding: ${margin}px;
+            background-color: ${paperColor};
+            box-sizing: border-box;
+            font-family: ${font};
+            font-size: ${fontSize}px;
+            line-height: ${lineHeight};
+            color: ${inkColor};
+            word-spacing: ${wordSpacing}px;
+            letter-spacing: ${letterSpacing}px;
+            white-space: pre-wrap;
+            position: relative;
+            overflow: hidden;
+        `;
+
+        const contentDiv = document.createElement('div');
+        contentDiv.style.position = 'relative';
+        contentDiv.style.marginTop = `-${fontSize * 0.05}px`;
+
+        const textDiv = document.createElement('div');
+        textDiv.style.position = 'relative';
+        textDiv.style.zIndex = '1';
+        textDiv.textContent = pageText;
+
+        contentDiv.appendChild(textDiv);
+        pageSheet.appendChild(contentDiv);
+        sheet.appendChild(pageSheet);
+    });
 
     return sheet;
 }

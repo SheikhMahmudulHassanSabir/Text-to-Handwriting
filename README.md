@@ -84,7 +84,7 @@ Contributions are welcome! If you have suggestions for new fonts, effects, or UI
 
 ## 👤 Author
 
-Developed and curated by **Sheikh** (EST. 2026).
+Developed and curated by **Sheikh Mahmudul Hassan Sabir** (EST. 2026).
 
 ## 📄 License
 

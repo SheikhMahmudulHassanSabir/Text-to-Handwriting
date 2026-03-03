@@ -275,27 +275,27 @@ function wireEvents() {
 function init() {
     const paperEl = document.getElementById('preview-paper');
 
-    // Build dynamic UI components
-    buildFontSelect();
-    buildColorSwatches();
-    buildPaperSizeSelect();
-    buildEffectSelect();
+    // Build dynamic UI components (only if relevant elements exist)
+    if (document.getElementById('font-select')) buildFontSelect();
+    if (document.getElementById('color-swatches')) buildColorSwatches();
+    if (document.getElementById('paper-size-select')) buildPaperSizeSelect();
+    if (document.getElementById('effect-select')) buildEffectSelect();
 
     // Subscribe to state: re-render preview + sync controls
     subscribe(state => {
-        renderPreview(state, paperEl);
+        if (paperEl) renderPreview(state, paperEl);
         syncUIToState(state);
     });
 
     // Wire all user-interaction events
     wireEvents();
 
-    // Initial render with default state
+    // Initial render with default state (if preview exists)
     const state = getState();
-    renderPreview(state, paperEl);
+    if (paperEl) renderPreview(state, paperEl);
     syncUIToState(state);
 
-    // Initialize mobile menu
+    // Initialize mobile menu (Always run)
     initMenu();
 }
 
